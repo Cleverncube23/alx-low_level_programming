@@ -1,10 +1,9 @@
 #include <stdio.h>
-/*
- * main - a program that prints a line with puts function
- *
- * Return: 0 
+/**
+ * Description: main - Prints out a string to stdout.
+ * Return: 0 if success.
  */
-int main (void)
+int main(void)
 {
 puts("\"Programming is like building a multilingual puzzle");
 return (0);
