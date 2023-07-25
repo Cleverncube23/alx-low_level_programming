@@ -25,9 +25,9 @@
  */
 typedef struct liststr
 {
-	int num;
-	char *str;
-	struct liststr *next;
+    int num;
+    char *str;
+    struct liststr *next;
 } list_t;
 
 /**
@@ -54,30 +54,41 @@ typedef struct liststr
  */
 typedef struct passinfo
 {
-	char *arg;
-	char **argv;
-	char *path;
-	int argc;
-	unsigned int line_count;
-	int err_num;
-	int linecount_flag;
-	char *fname;
-	list_t *env;
-	list_t *history;
-	list_t *alias;
-	char **environ;
-	int env_changed;
-	int status;
+    char *arg;
+    char **argv;
+    char *path;
+    int argc;
+    unsigned int line_count;
+    int err_num;
+    int linecount_flag;
+    char *fname;
+    list_t *env;
+    list_t *history;
+    list_t *alias;
+    char **environ;
+    int env_changed;
+    int status;
 
-	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory management */
-	int cmd_buf_type; /* CMD_type ||, &&, ; */
-	int readfd;
-	int histcount;
+    char **cmd_buf; /* pointer to cmd ; chain buffer, for memory management */
+    int cmd_buf_type; /* CMD_type ||, &&, ; */
+    int readfd;
+    int histcount;
 } info_t;
 
 #define INFO_INIT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
-		0, 0, 0}
+        0, 0, 0}
+
+/**
+ * struct builtin - contains a builtin string and related function
+ * @type: the builtin command flag
+ * @func: the function
+ */
+typedef struct builtin
+{
+    char *type;
+    int (*func)(info_t *);
+} builtin_table;
 
 /* Function to print the elements of a linked list */
 void print_list(list_t *head);
@@ -109,18 +120,7 @@ enum CMD_TYPE {
     CMD_OR,
     CMD_AND,
     CMD_CHAIN
-}
-
-/**
- * struct builtin - contains a builtin string and related function
- * @type: the builtin command flag
- * @func: the function
- */
-typedef struct builtin
-{
-	char *type;
-	int (*func)(info_t *);
-} builtin_table;
+};
 
 /* Shell functions */
 int hsh(info_t *info, char **av);
@@ -138,12 +138,6 @@ void write_history(info_t *info);
 void free_info(info_t *info, int status);
 void clear_info(info_t *info);
 char *_getenv(info_t *info, char *var);
-
-/* Function to print the elements of a linked list */
-void print_list(list_t *head);
-
-/* Function similar to strchr, searches for the first occurrence of a character in a string */
-char *_strchr(char *s, char c);
 
 /* String functions */
 int _strlen(char *s);
