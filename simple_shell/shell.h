@@ -79,6 +79,38 @@ typedef struct passinfo
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
 		0, 0, 0}
 
+/* Function to print the elements of a linked list */
+void print_list(list_t *head);
+
+/* Function similar to strchr, searches for the first occurrence of a character in a string */
+char *_strchr(char *s, char c);
+
+/* Function to get the index of a node in a linked list */
+unsigned int get_node_index(list_t *head, list_t *node);
+
+/* Function to find the first node in a linked list whose string starts with a given prefix */
+list_t *node_starts_with(list_t *head, const char *prefix, char c);
+
+/* Function to set and initialize the information in info_t struct */
+void set_info(info_t *info, char **argv, list_t *env, list_t *history, list_t *alias);
+
+/* Function to free a list of strings */
+void list_to_strings(char **strings);
+
+/* Function to check if a command is a chained command (e.g., ||, &&, ;) */
+int check_chain(char *str, char **next_cmd);
+
+/* Function to check if a string represents a chained command (e.g., ||, &&, ;) */
+int is_chain(char *str);
+
+/* Enum for command types */
+enum CMD_TYPE {
+    CMD_NORM,
+    CMD_OR,
+    CMD_AND,
+    CMD_CHAIN
+}
+
 /**
  * struct builtin - contains a builtin string and related function
  * @type: the builtin command flag
