@@ -1,6 +1,39 @@
 #include "shell.h"
 
 /**
+ * _eputchar - writes a character to the standard error stream
+ * @c: the character to be written
+ *
+ * Return: On success, the character written is returned.
+ * On error, EOF is returned, and errno is set appropriately.
+ */
+int _eputchar(int c)
+{
+	return write(STDERR_FILENO, &c, 1);
+}
+
+/**
+ * _eputs - writes a string to the standard error stream
+ * @str: the string to be written
+ *
+ * Return: On success, the number of characters written is returned.
+ * On error, EOF is returned, and errno is set appropriately.
+ */
+int _eputs(const char *str)
+{
+	int len = 0;
+
+	while (str[len])
+	{
+		if (_eputchar(str[len]) == EOF)
+			return EOF;
+		len++;
+	}
+
+	return len;
+}
+
+/**
  * main - entry point
  * @ac: arg count
  * @av: arg vector
@@ -9,37 +42,28 @@
  */
 int main(int ac, char **av)
 {
-	info_t info[] = { INFO_INIT };
-	int fd = 2;
-
-	asm ("mov %1, %0\n\t"
-			"add $3, %0"
-			: "=r" (fd)
-			: "r" (fd));
+	info_t info = INFO_INIT;
 
 	if (ac == 2)
 	{
-		fd = open(av[1], O_RDONLY);
+		int fd = open(av[1], O_RDONLY);
 		if (fd == -1)
 		{
 			if (errno == EACCES)
 				exit(126);
 			if (errno == ENOENT)
 			{
-				_eputs(av[0]);
-				_eputs(": 0: Can't open ");
-				_eputs(av[1]);
-				_eputchar('\n');
-				_eputchar(BUF_FLUSH);
+				_eprintf("%s: 0: Can't open %s\n", av[0], av[1]);
 				exit(127);
 			}
-			return (EXIT_FAILURE);
+			return EXIT_FAILURE;
 		}
-		info->readfd = fd;
+		info.readfd = fd;
 	}
-	populate_env_list(info);
-	read_history(info);
-	hsh(info, av);
-	return (EXIT_SUCCESS);
-}
 
+	populate_env_list(&info);
+	read_history(&info);
+	hsh(&info, av);
+
+	return EXIT_SUCCESS;
+}
