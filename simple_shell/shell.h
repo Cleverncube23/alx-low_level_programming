@@ -107,6 +107,12 @@ void free_info(info_t *info, int status);
 void clear_info(info_t *info);
 char *_getenv(info_t *info, char *var);
 
+/* Function to print the elements of a linked list */
+void print_list(list_t *head);
+
+/* Function similar to strchr, searches for the first occurrence of a character in a string */
+char *_strchr(char *s, char c);
+
 /* String functions */
 int _strlen(char *s);
 int _strcmp(char *s1, char *s2);
