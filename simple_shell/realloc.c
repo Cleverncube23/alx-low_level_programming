@@ -13,7 +13,7 @@ char *_memset(char *s, char b, unsigned int n)
 
 	for (i = 0; i < n; i++)
 		s[i] = b;
-	return (s);
+	return s;
 }
 
 /**
@@ -22,13 +22,12 @@ char *_memset(char *s, char b, unsigned int n)
  */
 void ffree(char **pp)
 {
-	char **a = pp;
-
-	if (!pp)
-		return;
-	while (*pp)
-		free(*pp++);
-	free(a);
+	if (pp)
+	{
+		for (char **p = pp; *p; p++)
+			free(*p);
+		free(pp);
+	}
 }
 
 /**
@@ -37,26 +36,28 @@ void ffree(char **pp)
  * @old_size: byte size of previous block
  * @new_size: byte size of new block
  *
- * Return: pointer to da ol'block nameen.
+ * Return: pointer to the reallocated block of memory
  */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	char *p;
-
 	if (!ptr)
-		return (malloc(new_size));
+		return malloc(new_size);
 	if (!new_size)
-		return (free(ptr), NULL);
+	{
+		free(ptr);
+		return NULL;
+	}
 	if (new_size == old_size)
-		return (ptr);
+		return ptr;
 
-	p = malloc(new_size);
+	char *p = malloc(new_size);
 	if (!p)
-		return (NULL);
+		return NULL;
 
-	old_size = old_size < new_size ? old_size : new_size;
-	while (old_size--)
-		p[old_size] = ((char *)ptr)[old_size];
+	unsigned int size_to_copy = old_size < new_size ? old_size : new_size;
+	for (unsigned int i = 0; i < size_to_copy; i++)
+		p[i] = ((char *)ptr)[i];
+
 	free(ptr);
-	return (p);
+	return p;
 }
